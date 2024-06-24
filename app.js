@@ -30,3 +30,18 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
+
+app.get('/download/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(svgDirectory, filename);
+  
+  if (fs.existsSync(filePath)) {
+      res.download(filePath, filename, (err) => {
+          if (err) {
+              res.status(500).send('Error downloading file');
+          }
+      });
+  } else {
+      res.status(404).send('File not found');
+  }
+});

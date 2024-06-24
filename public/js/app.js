@@ -17,8 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const div = document.createElement('div');
             div.className = 'svg-item';
             div.innerHTML = `
+            <a href="/download/${item.name}" class="download-btn">
                 <img src="/svg_files/${item.name}" alt="${item.name}">
                 <p title="${item.name}">${item.name}</p>
+            </a>
             `;
             resultsContainer.appendChild(div);
         });
