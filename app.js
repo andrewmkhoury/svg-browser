@@ -1,0 +1,32 @@
+require('dotenv').config();
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+const svgFolder = process.env.SVG_FOLDER || process.argv[2] || 'svg_files';
+const svgDirectory = path.resolve(svgFolder);
+
+console.log(`Using SVG directory: ${svgDirectory}`);
+
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use('/svg_files', express.static(svgDirectory));
+
+app.get('/', (req, res) => {
+    fs.readdir(svgDirectory, (err, files) => {
+        if (err) {
+            console.error('Error reading directory:', err);
+            return res.status(500).send('Error reading SVG files');
+        }
+
+        const svgFiles = files.filter(file => path.extname(file).toLowerCase() === '.svg');
+        res.render('index', { svgFiles });
+    });
+});
+
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
+});
